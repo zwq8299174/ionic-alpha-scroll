@@ -1,0 +1,57 @@
+{
+	"name": "ionic-alpha-scroll",
+	"version": "0.1.1",
+	"author": "zwq8299174",
+	"description": "一款基于ionic的索引列表插件，类似于原生APP的通讯录页面、微信的联系人页面、汽车之家的汽车品牌页面等等，首字母进行索引然后滑动。",
+	"main": "dist/index.js",
+	"typings": "dist/index.d.ts",
+	"scripts": {
+		"tslint": "tslint -c ./tslint.json -e './src/**/*.d.ts' './src/**/*.ts'",
+		"build": "rm -rf aot dist && ngc",
+		"postbuild": "npm run copy:scss",
+		"copy:scss": "scripts/copy.sh",
+		"push": "npm run build && npm publish"
+	},
+	"files": [
+		"dist",
+		"LICENSE",
+		"README.md"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/zwq8299174/ionic-alpha-scroll.git"
+	},
+	"keywords": [
+		"ionic,ionic2,alpha scroll"
+	],
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/zwq8299174/ionic-alpha-scroll/issues"
+	},
+	"homepage": "https://github.com/zwq8299174/ionic-alpha-scroll#readme",
+	"dependencies": {
+		"@types/lodash": "^4.14.61",
+		"alloytouch": "^0.2.5",
+		"alloytouch-transformjs": "^0.1.0"
+	},
+	"devDependencies": {
+		"@angular/common": "4.1.3",
+		"@angular/compiler": "4.1.3",
+		"@angular/compiler-cli": "4.1.3",
+		"@angular/core": "4.1.3",
+		"@angular/forms": "4.1.3",
+		"@angular/http": "4.1.3",
+		"@angular/platform-browser": "4.1.3",
+		"@angular/platform-browser-dynamic": "4.1.3",
+		"@angular/platform-server": "4.1.3",
+		"@ionic-native/core": "4.1.0",
+		"@ionic/storage": "2.0.1",
+		"ionic-angular": "3.6.1",
+		"ionicons": "3.0.0",
+		"rxjs": "5.4.0",
+		"tslint": "^5.4.3",
+		"tslint-ionic-rules": "0.0.11",
+		"typescript": "2.3.4",
+		"zone.js": "0.8.12"
+	}
+}

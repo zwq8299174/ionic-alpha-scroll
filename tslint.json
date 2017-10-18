@@ -1,0 +1,9 @@
+{
+  "extends": "tslint-ionic-rules",
+  "rules": {
+    "eofline": false,
+    "no-consecutive-blank-lines": [
+      true
+    ]
+  }
+}
