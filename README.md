@@ -9,6 +9,7 @@
 [DEMO](http://zwq8299174.github.io/ionic-alpha-scroll/)
 源码地址：[https://github.com/zwq8299174/ionic-alpha-scroll-demo](https://github.com/zwq8299174/ionic-alpha-scroll-demo)
 
+![Alt text](./Screenshot.gif)
 
 
 # 安装
