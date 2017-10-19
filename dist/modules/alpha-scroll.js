@@ -1,15 +1,13 @@
 import * as _ from 'lodash';
-require('alpha-scroll.scss');
-import { Component, ElementRef, Host, Input, ViewChild } from '@angular/core';
-import { Content } from 'ionic-angular';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { OrderBy } from '../pipes/order-by';
 import * as AlloyTouch from 'alloytouch';
 import * as Transform from 'alloytouch-transformjs';
+// import { Vibration } from '@ionic-native/vibration';
 var AlphaScroll = (function () {
-    function AlphaScroll(elementRef, orderBy, content) {
+    function AlphaScroll(elementRef, orderBy) {
         this.elementRef = elementRef;
         this.orderBy = orderBy;
-        this.content = content;
         this.sortedItems = [];
         this.alphabet = [];
         this.letterIndicatorEle = document.createElement('div');
@@ -19,11 +17,13 @@ var AlphaScroll = (function () {
     }
     AlphaScroll.prototype.ngOnInit = function () {
         var _this = this;
+        console.log(this.elementRef.nativeElement.offsetHeight);
+        console.log(this.list.nativeElement.offsetHeight);
         setTimeout(function () {
             _this.indicatorWidth = _this.letterIndicatorEle.offsetWidth;
             _this.indicatorHeight = _this.letterIndicatorEle.offsetHeight;
+            _this.setTouchHandlers();
         });
-        this.setTouchHandlers();
     };
     AlphaScroll.prototype.ngOnChanges = function () {
         var _this = this;
@@ -45,22 +45,12 @@ var AlphaScroll = (function () {
     };
     AlphaScroll.prototype.calculateDimensionsForSidebar = function () {
         return {
-            height: (this.content.getContentDimensions().contentHeight - 28) + 'px'
+            height: this.mainWrapper.nativeElement.clientHeight + 'px'
         };
-    };
-    AlphaScroll.prototype.alphaScrollGoToList = function (letter) {
-        var ele = this.elementRef.nativeElement.querySelector("#scroll-letter-" + letter);
-        var letterTop = ele.offsetTop;
-        var min = this.elementRef.nativeElement.offsetHeight - this.list.nativeElement.offsetHeight;
-        if (ele) {
-            this.alloyTouch.to(-letterTop < min ? min : -letterTop, 0);
-        }
     };
     AlphaScroll.prototype.setTouchHandlers = function () {
         var _this = this;
         var sidebarEle = this.elementRef.nativeElement.querySelector('.ion-alpha-sidebar');
-        // let wrapper: HTMLElement = this.elementRef.nativeElement.querySelector('.alpha-list-wrapper');
-        // let list: HTMLElement = this.mainWrapper.nativeElement.querySelector('.ion-alpha-list');
         if (!sidebarEle)
             return;
         this.elementRef.nativeElement.addEventListener('touchmove', function (evt) {
@@ -68,7 +58,6 @@ var AlphaScroll = (function () {
         }, false);
         setTimeout(function () {
             var min = _this.elementRef.nativeElement.offsetHeight - _this.list.nativeElement.offsetHeight;
-            console.log(min);
             _this.alloyTouch = new AlloyTouch({
                 touch: _this.mainWrapper.nativeElement,
                 vertical: true,
@@ -85,6 +74,7 @@ var AlphaScroll = (function () {
             });
             var chooseEle = function (evt) {
                 var closestEle = evt.type == 'touchend' ? document.elementFromPoint(evt.changedTouches[0].pageX, evt.changedTouches[0].pageY) : document.elementFromPoint(evt.targetTouches[0].pageX, evt.targetTouches[0].pageY);
+                // // console.log(closestEle);
                 if (closestEle && ['LI', 'A'].indexOf(closestEle.tagName) > -1) {
                     var letter = closestEle.innerText;
                     _this.letterIndicatorEle.innerText = letter;
@@ -157,7 +147,6 @@ AlphaScroll.decorators = [
 AlphaScroll.ctorParameters = function () { return [
     { type: ElementRef, },
     { type: OrderBy, },
-    { type: Content, decorators: [{ type: Host },] },
 ]; };
 AlphaScroll.propDecorators = {
     'mainWrapper': [{ type: ViewChild, args: ['wrapper',] },],

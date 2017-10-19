@@ -1,10 +1,8 @@
 import { ElementRef, OnChanges, OnDestroy, OnInit, TemplateRef } from '@angular/core';
-import { Content } from 'ionic-angular';
 import { OrderBy } from '../pipes/order-by';
 export declare class AlphaScroll implements OnInit, OnChanges, OnDestroy {
     private elementRef;
     private orderBy;
-    private content;
     mainWrapper: ElementRef;
     list: ElementRef;
     sidebar: ElementRef;
@@ -19,7 +17,7 @@ export declare class AlphaScroll implements OnInit, OnChanges, OnDestroy {
     private sidebarTouch;
     sortedItems: any;
     alphabet: any;
-    constructor(elementRef: ElementRef, orderBy: OrderBy, content: Content);
+    constructor(elementRef: ElementRef, orderBy: OrderBy);
     ngOnInit(): void;
     ngOnChanges(): void;
     ngOnDestroy(): void;
@@ -27,7 +25,6 @@ export declare class AlphaScroll implements OnInit, OnChanges, OnDestroy {
     calculateDimensionsForSidebar(): {
         height: string;
     };
-    alphaScrollGoToList(letter: any): void;
     private setTouchHandlers();
     private unwindGroup(groupItems);
     private iterateAlphabet(alphabet);

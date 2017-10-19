@@ -2,7 +2,6 @@ import * as _ from 'lodash';
 import {
 	Component,
 	ElementRef,
-	Host,
 	Input,
 	OnChanges,
 	OnDestroy,
@@ -10,7 +9,6 @@ import {
 	TemplateRef,
 	ViewChild
 } from '@angular/core';
-import { Content } from 'ionic-angular';
 
 import { OrderBy } from '../pipes/order-by';
 
@@ -53,8 +51,7 @@ export class AlphaScroll implements OnInit, OnChanges, OnDestroy {
 	alphabet: any = [];
 	constructor(
 		private elementRef: ElementRef,
-		private orderBy: OrderBy,
-		@Host() private content: Content
+		private orderBy: OrderBy
 	) {
 		this.letterIndicatorEle = document.createElement('div');
 		this.letterIndicatorEle.className = 'ion-alpha-letter-indicator';
@@ -62,7 +59,6 @@ export class AlphaScroll implements OnInit, OnChanges, OnDestroy {
 		body.appendChild(this.letterIndicatorEle);
 	}
 	ngOnInit() {
-		let min = this.elementRef.nativeElement.offsetHeight - this.list.nativeElement.offsetHeight;
 		console.log(this.elementRef.nativeElement.offsetHeight);
 		console.log(this.list.nativeElement.offsetHeight);
 		setTimeout(() => {
