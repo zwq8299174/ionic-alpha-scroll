@@ -1,4 +1,5 @@
 import * as _ from 'lodash';
+require('alpha-scroll.scss');
 import { Component, ElementRef, Host, Input, ViewChild } from '@angular/core';
 import { Content } from 'ionic-angular';
 import { OrderBy } from '../pipes/order-by';
@@ -15,17 +16,14 @@ var AlphaScroll = (function () {
         this.letterIndicatorEle.className = 'ion-alpha-letter-indicator';
         var body = document.getElementsByTagName('body')[0];
         body.appendChild(this.letterIndicatorEle);
-        console.log(666);
     }
     AlphaScroll.prototype.ngOnInit = function () {
         var _this = this;
-        // console.log(AlloyTouch);
         setTimeout(function () {
             _this.indicatorWidth = _this.letterIndicatorEle.offsetWidth;
             _this.indicatorHeight = _this.letterIndicatorEle.offsetHeight;
-            //this.setupHammerHandlers();
-            _this.setTouchHandlers();
         });
+        this.setTouchHandlers();
     };
     AlphaScroll.prototype.ngOnChanges = function () {
         var _this = this;
@@ -51,7 +49,6 @@ var AlphaScroll = (function () {
         };
     };
     AlphaScroll.prototype.alphaScrollGoToList = function (letter) {
-        navigator.vibrate(1000);
         var ele = this.elementRef.nativeElement.querySelector("#scroll-letter-" + letter);
         var letterTop = ele.offsetTop;
         var min = this.elementRef.nativeElement.offsetHeight - this.list.nativeElement.offsetHeight;
@@ -86,18 +83,14 @@ var AlphaScroll = (function () {
                 maxSpeed: 2,
                 initialValue: 0
             });
-            console.log(_this.alloyTouch);
             var chooseEle = function (evt) {
-                // console.log(evt);
                 var closestEle = evt.type == 'touchend' ? document.elementFromPoint(evt.changedTouches[0].pageX, evt.changedTouches[0].pageY) : document.elementFromPoint(evt.targetTouches[0].pageX, evt.targetTouches[0].pageY);
-                // // console.log(closestEle);
                 if (closestEle && ['LI', 'A'].indexOf(closestEle.tagName) > -1) {
                     var letter = closestEle.innerText;
                     _this.letterIndicatorEle.innerText = letter;
                     _this.letterIndicatorEle.style.visibility = 'visible';
                     var letterDivider = _this.elementRef.nativeElement.querySelector("#scroll-letter-" + letter);
                     var letterTop = letterDivider.offsetTop;
-                    // console.log(-letterTop<min?min:-letterTop);
                     if (letterDivider) {
                         _this.alloyTouch.to(-letterTop < min ? min : -letterTop, 0);
                     }

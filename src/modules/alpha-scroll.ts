@@ -13,8 +13,10 @@ import {
 import { Content } from 'ionic-angular';
 
 import { OrderBy } from '../pipes/order-by';
+
 import * as AlloyTouch from 'alloytouch';
 import * as Transform from 'alloytouch-transformjs';
+// import { Vibration } from '@ionic-native/vibration';
 
 @Component({
 	selector: 'ion-alpha-scroll',
@@ -59,8 +61,10 @@ export class AlphaScroll implements OnInit, OnChanges, OnDestroy {
 		let body = document.getElementsByTagName('body')[0];
 		body.appendChild(this.letterIndicatorEle);
 	}
-
 	ngOnInit() {
+		let min = this.elementRef.nativeElement.offsetHeight - this.list.nativeElement.offsetHeight;
+		console.log(this.elementRef.nativeElement.offsetHeight);
+		console.log(this.list.nativeElement.offsetHeight);
 		setTimeout(() => {
 			this.indicatorWidth = this.letterIndicatorEle.offsetWidth;
 			this.indicatorHeight = this.letterIndicatorEle.offsetHeight;
@@ -81,38 +85,25 @@ export class AlphaScroll implements OnInit, OnChanges, OnDestroy {
 		if (this.letterIndicatorEle) {
 			this.letterIndicatorEle.remove();
 		}
-
-
 	}
+
 	setAlphaClass(alpha: any): string {
 		return alpha.isActive ? 'ion-alpha-active' : 'ion-alpha-invalid';
 	}
 
 	calculateDimensionsForSidebar() {
 		return {
-			height: (this.content.getContentDimensions().contentHeight - 28) + 'px'
+			height: this.mainWrapper.nativeElement.clientHeight + 'px'
 		};
-	}
-
-	alphaScrollGoToList(letter: any) {
-		let ele: any = this.elementRef.nativeElement.querySelector(`#scroll-letter-${letter}`);
-		let letterTop:number = ele.offsetTop;
-		let min = this.elementRef.nativeElement.offsetHeight - this.list.nativeElement.offsetHeight;
-		if (ele) {
-			this.alloyTouch.to(-letterTop<min?min:-letterTop, 0);
-		}
 	}
 	private setTouchHandlers() {
 		let sidebarEle: HTMLElement = this.elementRef.nativeElement.querySelector('.ion-alpha-sidebar');
-		// let wrapper: HTMLElement = this.elementRef.nativeElement.querySelector('.alpha-list-wrapper');
-		// let list: HTMLElement = this.mainWrapper.nativeElement.querySelector('.ion-alpha-list');
 		if (!sidebarEle) return;
 		this.elementRef.nativeElement.addEventListener('touchmove', function(evt) {
 			evt.preventDefault();
 		}, false);
 		setTimeout(() => {
 			let min = this.elementRef.nativeElement.offsetHeight - this.list.nativeElement.offsetHeight;
-			console.log(min);
 			this.alloyTouch = new AlloyTouch({
 				touch: this.mainWrapper.nativeElement,//反馈触摸的dom
 				vertical: true,//不必需，默认是true代表监听竖直方向touch
@@ -127,16 +118,17 @@ export class AlphaScroll implements OnInit, OnChanges, OnDestroy {
 				maxSpeed: 2, //不必需，触摸反馈的最大速度限制
 				initialValue: 0
 			});
-			let chooseEle = (evt)=>{
-				let closestEle: any = evt.type=='touchend'?document.elementFromPoint(evt.changedTouches[0].pageX, evt.changedTouches[0].pageY):document.elementFromPoint(evt.targetTouches[0].pageX, evt.targetTouches[0].pageY);
+			let chooseEle = (evt) => {
+				let closestEle: any = evt.type == 'touchend' ? document.elementFromPoint(evt.changedTouches[0].pageX, evt.changedTouches[0].pageY) : document.elementFromPoint(evt.targetTouches[0].pageX, evt.targetTouches[0].pageY);
+				// // console.log(closestEle);
 				if (closestEle && ['LI', 'A'].indexOf(closestEle.tagName) > -1) {
 					let letter = closestEle.innerText;
 					this.letterIndicatorEle.innerText = letter;
 					this.letterIndicatorEle.style.visibility = 'visible';
 					let letterDivider: any = this.elementRef.nativeElement.querySelector(`#scroll-letter-${letter}`);
-					let letterTop:number = letterDivider.offsetTop;
+					let letterTop: number = letterDivider.offsetTop;
 					if (letterDivider) {
-						this.alloyTouch.to(-letterTop<min?min:-letterTop, 0);
+						this.alloyTouch.to(-letterTop < min ? min : -letterTop, 0);
 					}
 				}
 			}
@@ -158,13 +150,13 @@ export class AlphaScroll implements OnInit, OnChanges, OnDestroy {
 					this.letterIndicatorEle.style.top = ((window.innerHeight - this.indicatorHeight) / 2) + 'px';
 					this.letterIndicatorEle.style.left = ((window.innerWidth - this.indicatorWidth) / 2) + 'px';
 				},
-				touchMove: (evt)=> {
+				touchMove: (evt) => {
 					chooseEle(evt);
 				},
-				touchEnd:()=>{
+				touchEnd: () => {
 					this.letterIndicatorEle.style.visibility = 'hidden';
 				},
-				tap:(evt)=>{
+				tap: (evt) => {
 					chooseEle(evt);
 				}
 			});
