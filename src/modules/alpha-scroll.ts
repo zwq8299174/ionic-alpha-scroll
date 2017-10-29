@@ -20,7 +20,9 @@ import * as Transform from 'alloytouch-transformjs';
 	selector: 'ion-alpha-scroll',
 	template: `
   <section class="alpha-list-wrapper" #wrapper>
-	    <ion-list class="ion-alpha-list" #list>
+		<ion-list class="ion-alpha-list" #list>
+		<ion-item-divider id="scroll-letter-↑" style="display:none" *ngIf="headerTemplate!=null">↑</ion-item-divider>
+		<ng-template [ngTemplateOutlet]="headerTemplate" ></ng-template>
 	      <div *ngFor="let item of sortedItems">
 	        <ion-item-divider id="scroll-letter-{{item.letter}}" *ngIf="item.isDivider">{{item.letter}}</ion-item-divider>
 	        <ng-template [ngTemplateOutlet]="itemTemplate" [ngOutletContext]="{'item': item, 'currentPageClass': currentPageClass}" *ngIf="!item.isDivider">
@@ -42,6 +44,13 @@ export class AlphaScroll implements OnInit, OnChanges, OnDestroy {
 	@Input() key: string;
 	@Input() itemTemplate: TemplateRef<Object>;
 	@Input() currentPageClass: any;
+	/**
+	 * 头部区域模板
+	 * 
+	 * @type {TemplateRef<Object>}
+	 * @memberof AlphaScroll
+	 */
+	@Input() headerTemplate: TemplateRef<Object>;
 	private letterIndicatorEle: HTMLElement;
 	private indicatorHeight: number;
 	private indicatorWidth: number;
@@ -73,6 +82,10 @@ export class AlphaScroll implements OnInit, OnChanges, OnDestroy {
 			let letter: any = _.get(item, this.key);
 			return letter.toUpperCase().charAt(0);
 		});
+		//根据头部模板是否为null 添加字符
+		if(this.headerTemplate != null || this.headerTemplate != undefined){
+			groupItems['↑'] = [];
+		}
 		this.sortedItems = this.unwindGroup(groupItems);
 		this.alphabet = this.iterateAlphabet(groupItems);
 	}
@@ -95,7 +108,7 @@ export class AlphaScroll implements OnInit, OnChanges, OnDestroy {
 	private setTouchHandlers() {
 		let sidebarEle: HTMLElement = this.elementRef.nativeElement.querySelector('.ion-alpha-sidebar');
 		if (!sidebarEle) return;
-		this.elementRef.nativeElement.addEventListener('touchmove', function(evt) {
+		this.elementRef.nativeElement.addEventListener('touchmove', function (evt) {
 			evt.preventDefault();
 		}, false);
 		setTimeout(() => {
@@ -167,7 +180,12 @@ export class AlphaScroll implements OnInit, OnChanges, OnDestroy {
 		return result;
 	}
 	private iterateAlphabet(alphabet: any): Array<any> {
-		let str: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		let str: string;
+		if (this.headerTemplate != null || this.headerTemplate != undefined) {
+			str = '↑ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		} else {
+			str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		}
 		let result: Array<any> = [];
 		for (let i = 0; i < str.length; i++) {
 			let letter = str.charAt(i);
