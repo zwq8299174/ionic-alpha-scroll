@@ -32,6 +32,10 @@ var AlphaScroll = (function () {
             var letter = _.get(item, _this.key);
             return letter.toUpperCase().charAt(0);
         });
+        //根据头部模板是否为null 添加字符
+        if (this.headerTemplate != null || this.headerTemplate != undefined) {
+            groupItems['↑'] = [];
+        }
         this.sortedItems = this.unwindGroup(groupItems);
         this.alphabet = this.iterateAlphabet(groupItems);
     };
@@ -125,7 +129,13 @@ var AlphaScroll = (function () {
         return result;
     };
     AlphaScroll.prototype.iterateAlphabet = function (alphabet) {
-        var str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        var str;
+        if (this.headerTemplate != null || this.headerTemplate != undefined) {
+            str = '↑ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        }
+        else {
+            str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        }
         var result = [];
         for (var i = 0; i < str.length; i++) {
             var letter = str.charAt(i);
@@ -140,7 +150,7 @@ export { AlphaScroll };
 AlphaScroll.decorators = [
     { type: Component, args: [{
                 selector: 'ion-alpha-scroll',
-                template: "\n  <section class=\"alpha-list-wrapper\" #wrapper>\n\t    <ion-list class=\"ion-alpha-list\" #list>\n\t      <div *ngFor=\"let item of sortedItems\">\n\t        <ion-item-divider id=\"scroll-letter-{{item.letter}}\" *ngIf=\"item.isDivider\">{{item.letter}}</ion-item-divider>\n\t        <ng-template [ngTemplateOutlet]=\"itemTemplate\" [ngOutletContext]=\"{'item': item, 'currentPageClass': currentPageClass}\" *ngIf=\"!item.isDivider\">\n\t        </ng-template>\n\t      </div>\n\t    </ion-list>\n    </section>\n    <ul class=\"ion-alpha-sidebar\" [ngStyle]=\"calculateDimensionsForSidebar()\" #sidebar>\n      <li *ngFor=\"let alpha of alphabet\" [hidden]=\"!alpha.isActive\" [class]=\"setAlphaClass(alpha)\">\n        <a>{{alpha.letter}}</a>\n      </li>\n    </ul>"
+                template: "\n  <section class=\"alpha-list-wrapper\" #wrapper>\n\t  <ion-list class=\"ion-alpha-list\" #list>\n\t\t<ion-item-divider id=\"scroll-letter-\u2191\" style=\"display:none\" *ngIf=\"headerTemplate!=null\">\u2191</ion-item-divider>\n\t\t<ng-template [ngTemplateOutlet]=\"headerTemplate\" ></ng-template>\n\t      <div *ngFor=\"let item of sortedItems\">\n\t        <ion-item-divider id=\"scroll-letter-{{item.letter}}\" *ngIf=\"item.isDivider\">{{item.letter}}</ion-item-divider>\n\t        <ng-template [ngTemplateOutlet]=\"itemTemplate\" [ngOutletContext]=\"{'item': item, 'currentPageClass': currentPageClass}\" *ngIf=\"!item.isDivider\">\n\t        </ng-template>\n\t      </div>\n\t    </ion-list>\n    </section>\n    <ul class=\"ion-alpha-sidebar\" [ngStyle]=\"calculateDimensionsForSidebar()\" #sidebar>\n      <li *ngFor=\"let alpha of alphabet\" [hidden]=\"!alpha.isActive\" [class]=\"setAlphaClass(alpha)\">\n        <a>{{alpha.letter}}</a>\n      </li>\n    </ul>"
             },] },
 ];
 /** @nocollapse */
@@ -156,5 +166,6 @@ AlphaScroll.propDecorators = {
     'key': [{ type: Input },],
     'itemTemplate': [{ type: Input },],
     'currentPageClass': [{ type: Input },],
+    'headerTemplate': [{ type: Input },],
 };
 //# sourceMappingURL=alpha-scroll.js.map

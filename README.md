@@ -5,6 +5,11 @@
 
 	丝般顺滑的滑动，不卡顿、不闪屏、不抖动，接近原生的滚动体验。
 
+#更新：
+
+### 20171103
+1、新增自定义头部模板功能。感谢[@Yan Xiaodi](https://github.com/yanxiaodi)
+
 # DEMO
 [DEMO](http://zwq8299174.github.io/ionic-alpha-scroll/)
 源码地址：[https://github.com/zwq8299174/ionic-alpha-scroll-demo](https://github.com/zwq8299174/ionic-alpha-scroll-demo)

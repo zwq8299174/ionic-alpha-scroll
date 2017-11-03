@@ -10,6 +10,13 @@ export declare class AlphaScroll implements OnInit, OnChanges, OnDestroy {
     key: string;
     itemTemplate: TemplateRef<Object>;
     currentPageClass: any;
+    /**
+     * 头部区域模板
+     *
+     * @type {TemplateRef<Object>}
+     * @memberof AlphaScroll
+     */
+    headerTemplate: TemplateRef<Object>;
     private letterIndicatorEle;
     private indicatorHeight;
     private indicatorWidth;

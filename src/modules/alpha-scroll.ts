@@ -20,7 +20,7 @@ import * as Transform from 'alloytouch-transformjs';
 	selector: 'ion-alpha-scroll',
 	template: `
   <section class="alpha-list-wrapper" #wrapper>
-		<ion-list class="ion-alpha-list" #list>
+	  <ion-list class="ion-alpha-list" #list>
 		<ion-item-divider id="scroll-letter-↑" style="display:none" *ngIf="headerTemplate!=null">↑</ion-item-divider>
 		<ng-template [ngTemplateOutlet]="headerTemplate" ></ng-template>
 	      <div *ngFor="let item of sortedItems">
@@ -46,7 +46,7 @@ export class AlphaScroll implements OnInit, OnChanges, OnDestroy {
 	@Input() currentPageClass: any;
 	/**
 	 * 头部区域模板
-	 * 
+	 *
 	 * @type {TemplateRef<Object>}
 	 * @memberof AlphaScroll
 	 */
