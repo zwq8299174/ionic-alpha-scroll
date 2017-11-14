@@ -77,7 +77,8 @@ export class AlphaScroll implements OnInit, OnChanges, OnDestroy {
 		});
 	}
 	ngOnChanges() {
-		let sortedListData: Array<any> = this.orderBy.transform(this.listData, [this.key]);
+		// 先对传入的listData排序 避免结果顺序乱掉
+		let sortedListData: Array<any> = this.orderBy.transform(_.orderBy(this.listData, x => x.initial), [this.key]);
 		let groupItems: any = _.groupBy(sortedListData, item => {
 			let letter: any = _.get(item, this.key);
 			return letter.toUpperCase().charAt(0);
