@@ -27,13 +27,14 @@ var AlphaScroll = (function () {
     };
     AlphaScroll.prototype.ngOnChanges = function () {
         var _this = this;
-        var sortedListData = this.orderBy.transform(this.listData, [this.key]);
+        // 先对传入的listData排序 避免结果顺序乱掉
+        var sortedListData = this.orderBy.transform(_.orderBy(this.listData, function (x) { return x.initial; }), [this.key]);
         var groupItems = _.groupBy(sortedListData, function (item) {
             var letter = _.get(item, _this.key);
             return letter.toUpperCase().charAt(0);
         });
-        //根据头部模板是否为null 添加字符
-        if (this.headerTemplate != null || this.headerTemplate != undefined) {
+        // 根据头部模板是否为null 添加字符
+        if (this.headerTemplate != null || this.headerTemplate !== undefined) {
             groupItems['↑'] = [];
         }
         this.sortedItems = this.unwindGroup(groupItems);
@@ -62,11 +63,13 @@ var AlphaScroll = (function () {
         }, false);
         setTimeout(function () {
             var min = _this.elementRef.nativeElement.offsetHeight - _this.list.nativeElement.offsetHeight;
+            if (min > 0)
+                min = 0; // 解决列表项不满一屏时报 min > max 的问题
             _this.alloyTouch = new AlloyTouch({
                 touch: _this.mainWrapper.nativeElement,
                 vertical: true,
                 target: _this.list.nativeElement,
-                property: "translateY",
+                property: 'translateY',
                 min: min,
                 max: 0,
                 sensitivity: 1,
@@ -77,7 +80,7 @@ var AlphaScroll = (function () {
                 initialValue: 0
             });
             var chooseEle = function (evt) {
-                var closestEle = evt.type == 'touchend' ? document.elementFromPoint(evt.changedTouches[0].pageX, evt.changedTouches[0].pageY) : document.elementFromPoint(evt.targetTouches[0].pageX, evt.targetTouches[0].pageY);
+                var closestEle = evt.type === 'touchend' ? document.elementFromPoint(evt.changedTouches[0].pageX, evt.changedTouches[0].pageY) : document.elementFromPoint(evt.targetTouches[0].pageX, evt.targetTouches[0].pageY);
                 // // console.log(closestEle);
                 if (closestEle && ['LI', 'A'].indexOf(closestEle.tagName) > -1) {
                     var letter = closestEle.innerText;
@@ -94,7 +97,7 @@ var AlphaScroll = (function () {
                 touch: _this.sidebar.nativeElement,
                 vertical: true,
                 target: _this.sidebar.nativeElement,
-                property: "translateY",
+                property: 'translateY',
                 min: 0,
                 max: 0,
                 sensitivity: 1,
@@ -130,7 +133,7 @@ var AlphaScroll = (function () {
     };
     AlphaScroll.prototype.iterateAlphabet = function (alphabet) {
         var str;
-        if (this.headerTemplate != null || this.headerTemplate != undefined) {
+        if (this.headerTemplate != null || this.headerTemplate !== undefined) {
             str = '↑ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         }
         else {
@@ -150,7 +153,7 @@ export { AlphaScroll };
 AlphaScroll.decorators = [
     { type: Component, args: [{
                 selector: 'ion-alpha-scroll',
-                template: "\n  <section class=\"alpha-list-wrapper\" #wrapper>\n\t  <ion-list class=\"ion-alpha-list\" #list>\n\t\t<ion-item-divider id=\"scroll-letter-\u2191\" style=\"display:none\" *ngIf=\"headerTemplate!=null\">\u2191</ion-item-divider>\n\t\t<ng-template [ngTemplateOutlet]=\"headerTemplate\" ></ng-template>\n\t      <div *ngFor=\"let item of sortedItems\">\n\t        <ion-item-divider id=\"scroll-letter-{{item.letter}}\" *ngIf=\"item.isDivider\">{{item.letter}}</ion-item-divider>\n\t        <ng-template [ngTemplateOutlet]=\"itemTemplate\" [ngOutletContext]=\"{'item': item, 'currentPageClass': currentPageClass}\" *ngIf=\"!item.isDivider\">\n\t        </ng-template>\n\t      </div>\n\t    </ion-list>\n    </section>\n    <ul class=\"ion-alpha-sidebar\" [ngStyle]=\"calculateDimensionsForSidebar()\" #sidebar>\n      <li *ngFor=\"let alpha of alphabet\" [hidden]=\"!alpha.isActive\" [class]=\"setAlphaClass(alpha)\">\n        <a>{{alpha.letter}}</a>\n      </li>\n    </ul>"
+                template: "\n  <section class=\"alpha-list-wrapper\" #wrapper>\n    <ion-list class=\"ion-alpha-list\" #list>\n    <ion-item-divider id=\"scroll-letter-\u2191\" style=\"display:none\" *ngIf=\"headerTemplate!=null\">\u2191</ion-item-divider>\n    <ng-template [ngTemplateOutlet]=\"headerTemplate\" ></ng-template>\n        <div *ngFor=\"let item of sortedItems\">\n          <ion-item-divider id=\"scroll-letter-{{item.letter}}\" *ngIf=\"item.isDivider\">{{item.letter}}</ion-item-divider>\n          <ng-template [ngTemplateOutlet]=\"itemTemplate\" [ngOutletContext]=\"{'item': item, 'currentPageClass': currentPageClass}\" *ngIf=\"!item.isDivider\">\n          </ng-template>\n        </div>\n      </ion-list>\n    </section>\n    <ul class=\"ion-alpha-sidebar\" [ngStyle]=\"calculateDimensionsForSidebar()\" #sidebar>\n      <li *ngFor=\"let alpha of alphabet\" [hidden]=\"!alpha.isActive\" [class]=\"setAlphaClass(alpha)\">\n        <a>{{alpha.letter}}</a>\n      </li>\n    </ul>"
             },] },
 ];
 /** @nocollapse */
