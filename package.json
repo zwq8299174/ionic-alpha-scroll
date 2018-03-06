@@ -1,6 +1,6 @@
 {
 	"name": "ionic-alpha-scroll",
-	"version": "0.1.5",
+	"version": "0.1.6",
 	"author": "zwq8299174",
 	"description": "一款基于ionic的索引列表插件，类似于原生APP的通讯录页面、微信的联系人页面、汽车之家的汽车品牌页面等等，首字母进行索引然后滑动。",
 	"main": "dist/index.js",
